@@ -14,6 +14,9 @@ import Web.HTML (window)
 import Web.HTML.Navigator (userAgent)
 import Web.HTML.Window (alert, navigator)
 
+import Components.WalletInfo as WalletInfo
+import Components.AppPanel as AppPanel
+
 component :: forall q i o m. H.Component q i o m
 component =
   H.mkComponent
@@ -26,9 +29,8 @@ component =
   render _ =
     HH.div
       [ HP.class_ $ HH.ClassName "container-fluid d-flex flex-column" ]
-      [ HH.h1_
-          [ HH.text "Hello World!"
-          ]
+      [ WalletInfo.render unit
+      , AppPanel.render unit
       ]
 
 main :: Effect Unit
