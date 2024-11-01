@@ -16,9 +16,10 @@ export function namiVersion(window) {
   }
 }
 
-export function enableNami(window) {
+export function enableImpl(window) {
+  var enable = window.cardano.nami.enable;
   return function() {
-    return window.cardano.nami.enable;
+    return enable();
   }
 }
 

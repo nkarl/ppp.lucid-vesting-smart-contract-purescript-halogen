@@ -34,13 +34,29 @@ component =
     }
   where
   render _ = App.render unit
-  
 
 main :: Effect Unit
 main = do
 
   runSandbox
-  runSandboxAff
+  --runSandboxAff
+  _ <- launchAff_ do -- check isEnabled
+    w <- liftEffect window
+    s <- Cardano.isEnabled w
+    _ <- pure $ Debug.spy "spy nami async isEnabled" s
+    pure unit
+  _ <- launchAff_ do -- enable Nami
+    w <- liftEffect window
+    s <- Cardano.enable w
+    _ <- pure $ Debug.spy "spy nami async enable" s
+    pure unit
+  _ <- launchAff_ do -- check isEnabled again
+    w <- liftEffect window
+    s <- Cardano.isEnabled w
+    _ <- pure $ Debug.spy "spy nami async isEnabled" s
+    pure unit
+  -- NOTE: the enable function communicates with the wallet extension.
+  -- it request for access just once. Therefore, all subsequent checks will return True.
 
   agent <- userAgent =<< navigator =<< window
   logShow agent

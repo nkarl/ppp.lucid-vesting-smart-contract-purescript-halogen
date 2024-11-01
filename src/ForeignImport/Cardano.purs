@@ -19,9 +19,12 @@ foreign import namiVersion :: Window -> Effect String
 
 foreign import data NamiEnabled :: Type
 
---foreign import enableNami :: Window -> Effect 
+foreign import enableImpl :: Window -> Effect (Promise Unit)
 
-foreign import isEnabledImpl :: Window -> Effect (Promise NamiEnabled)
+enable :: Window -> Aff Unit
+enable = enableImpl >>> Promise.toAffE
 
-isEnabled :: Window -> Aff NamiEnabled
+foreign import isEnabledImpl :: Window -> Effect (Promise Boolean)
+
+isEnabled :: Window -> Aff Boolean
 isEnabled = isEnabledImpl >>> Promise.toAffE
