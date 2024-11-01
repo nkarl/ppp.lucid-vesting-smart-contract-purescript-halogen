@@ -2,22 +2,30 @@ module Main where
 
 import Prelude
 
+import Components.App as App
+import Data.Either (Either(..))
 import Data.String (Pattern(..), contains)
+import Debug as Debug
 import Effect (Effect)
-import Effect.Class.Console (logShow)
+import Effect.Aff (Aff, attempt, delay, error, forkAff, joinFiber, killFiber, launchAff_, makeAff, message)
+import Effect.Aff (forkAff, launchAff_, launchAff)
+import Effect.Aff.AVar (AVar)
+import Effect.Aff.AVar as AVar
+import Effect.Aff.Class (class MonadAff, liftAff)
+import Effect.Class (liftEffect)
+import Effect.Class.Console (log, logShow)
+import ForeignImport.Cardano as Cardano
+import ForeignImport.OsDetails as OD
 import Halogen as H
 import Halogen.Aff as HA
-import Halogen.HTML as HH
-import Halogen.HTML.Properties as HP
 import Halogen.VDom.Driver (runUI)
 import Web.HTML (window)
 import Web.HTML.Navigator (userAgent)
 import Web.HTML.Window (alert, navigator)
 
-import Components.WalletInfo as WalletInfo
-import Components.AppPanel as AppPanel
+import Promise.Aff as Promise
 
-component :: forall q i o m. H.Component q i o m
+component :: forall q i o m. MonadAff m => H.Component q i o m
 component =
   H.mkComponent
     { initialState: identity
@@ -25,21 +33,39 @@ component =
     , eval: H.mkEval H.defaultEval
     }
   where
-
-  render _ =
-    HH.div
-      [ HP.class_ $ HH.ClassName "container-fluid d-flex flex-column" ]
-      [ WalletInfo.render unit
-      , AppPanel.render unit
-      ]
+  render _ = App.render unit
+  
 
 main :: Effect Unit
 main = do
-  a <- userAgent =<< navigator =<< window
-  logShow a
-  if (Pattern "Chrome") `contains` a then do
+
+  runSandbox
+  runSandboxAff
+
+  agent <- userAgent =<< navigator =<< window
+  logShow agent
+  if (Pattern "Chrome") `contains` agent then do
     HA.runHalogenAff do
       body <- HA.awaitBody
       runUI component unit body
   else
-    alert "The App only support Chromium-based browser." =<< window
+    alert "The App only supports Chromium-based browser." =<< window
+
+runSandboxAff :: Effect Unit
+runSandboxAff = launchAff_ do
+  w <- liftEffect window
+  s <- Cardano.isEnabled w
+  _ <- pure $ Debug.spy "spy nami effect" s
+  pure unit
+
+runSandbox :: Effect Unit
+runSandbox = do
+  w <- window
+  _ <- pure $ Debug.spy "spy Window:" w
+  nami <- Cardano.nami w
+  _ <- pure $ Debug.spy "spy nami wallet:" nami
+  namiVer <- Cardano.namiVersion w
+  _ <- pure $ Debug.spy "spy nami version:" namiVer
+  od <- OD.osDetails
+  _ <- pure $ Debug.spy "spy OsDetails" (od :: OD.OsDetails)
+  logShow od.screen

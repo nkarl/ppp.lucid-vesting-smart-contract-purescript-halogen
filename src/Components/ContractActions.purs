@@ -1,4 +1,4 @@
-module Components.ContractPanel where
+module Components.ContractActions where
 
 import Halogen.HTML as HH
 import Halogen.HTML.Properties as HP

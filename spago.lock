@@ -6,8 +6,10 @@
         "core": {
           "dependencies": [
             "console",
+            "debug",
             "effect",
             "halogen",
+            "js-promise-aff",
             "prelude"
           ],
           "build_plan": [
@@ -21,6 +23,7 @@
             "contravariant",
             "control",
             "datetime",
+            "debug",
             "distributive",
             "dom-indexed",
             "effect",
@@ -45,6 +48,7 @@
             "invariant",
             "js-date",
             "js-promise",
+            "js-promise-aff",
             "lazy",
             "lists",
             "maybe",
@@ -754,6 +758,15 @@
         "tuples"
       ]
     },
+    "debug": {
+      "type": "registry",
+      "version": "6.0.2",
+      "integrity": "sha256-vmkYFuXYuELBzeauvgHG6E6Kf/Hp1dAnxwE9ByHfwSg=",
+      "dependencies": [
+        "functions",
+        "prelude"
+      ]
+    },
     "distributive": {
       "type": "registry",
       "version": "6.0.0",
@@ -1085,6 +1098,16 @@
         "functions",
         "maybe",
         "prelude"
+      ]
+    },
+    "js-promise-aff": {
+      "type": "registry",
+      "version": "1.0.0",
+      "integrity": "sha256-s9kml9Ei74hKlMMg41yyZp4GkbmYUwaH+gBWWrdhwec=",
+      "dependencies": [
+        "aff",
+        "foreign",
+        "js-promise"
       ]
     },
     "lazy": {

@@ -2,8 +2,10 @@ package:
   name: lucid
   dependencies:
     - console
+    - debug
     - effect
     - halogen
+    - js-promise-aff
     - prelude
   test:
     main: Test.Main
