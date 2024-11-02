@@ -4,6 +4,7 @@ package:
     - console
     - debug
     - effect
+    - functions
     - halogen
     - js-promise-aff
     - prelude
