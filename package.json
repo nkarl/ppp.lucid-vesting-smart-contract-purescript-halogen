@@ -13,6 +13,8 @@
     "license": "ISC",
     "description": "",
     "dependencies": {
-        "esbuild": "^0.23.1"
+        "dotenv": "^16.4.5",
+        "esbuild": "^0.23.1",
+        "lucid-cardano": "^0.10.10"
     }
 }

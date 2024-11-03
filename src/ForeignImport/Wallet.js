@@ -1,16 +1,16 @@
-export function hasCardanoImpl(window) {
+function hasCardanoImpl(window) {
   return function() {
     return window.cardano;
   }
 }
 
-export function hasNamiImpl(window) {
+function hasNamiImpl(window) {
   return function() {
     return window.cardano.nami;
   }
 }
 
-export function maybeNamiImpl(window, just, nothing) {
+function maybeNamiImpl(window, just, nothing) {
   if (window.cardano.nami) {
     return just(window.cardano.nami);
   } else {
@@ -18,37 +18,48 @@ export function maybeNamiImpl(window, just, nothing) {
   }
 }
 
-export function enableNamiImpl(window) {
+function enableNamiImpl(window) {
   var enable = window.cardano.nami.enable;
   return function() {
     return enable();
   }
 }
 
-export function isEnabledNamiImpl(window) {
+function isEnabledNamiImpl(window) {
   var isEnabled = window.cardano.nami.isEnabled;
   return async function() {
     return await isEnabled();
   }
 }
 
-export function isEnabledNamiImpl2(nami) {
+function isEnabledNamiImpl2(nami) {
   var isEnabled = nami.isEnabled;
   return async function() {
     return await isEnabled();
   }
 }
 
-export function hasPropImpl(window) {
+function hasPropImpl(window) {
   return function() {
     return window.prop;
   }
 }
 
-export function maybePropImpl(window, just, nothing) {
+function maybePropImpl(window, just, nothing) {
   if (window.prop) {
     return just(window.prop);
   } else {
     return nothing;
   }
+}
+
+export {
+  hasCardanoImpl,
+  hasNamiImpl,
+  maybeNamiImpl,
+  enableNamiImpl,
+  isEnabledNamiImpl,
+  isEnabledNamiImpl2,
+  hasPropImpl,
+  maybePropImpl
 }
