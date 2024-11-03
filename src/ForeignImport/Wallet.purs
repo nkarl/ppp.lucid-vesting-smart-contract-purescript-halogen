@@ -24,17 +24,26 @@ maybeNami
 maybeNami w =
   pure $ runFn3 maybeNamiImpl w Just Nothing
 
---foreign import data NamiEnabled :: Type
+foreign import enableNamiImpl
+  :: Window -> Effect (Promise Unit)
 
---foreign import enableImpl :: Window -> Effect (Promise Unit)
+enableNami
+  :: Window -> Aff Unit
+enableNami = enableNamiImpl >>> PromiseAff.toAffE
 
---enable :: Window -> Aff Unit
---enable = enableImpl >>> PromiseAff.toAffE
+foreign import isEnabledNamiImpl
+  :: Window -> Effect (Promise Boolean)
 
---foreign import isEnabledImpl :: Window -> Effect (Promise Boolean)
+isEnabledNami
+  :: Window -> Aff Boolean
+isEnabledNami = isEnabledNamiImpl >>> PromiseAff.toAffE
 
---isEnabled :: Window -> Aff Boolean
---isEnabled = isEnabledImpl >>> PromiseAff.toAffE
+foreign import isEnabledNamiImpl2
+  :: Type -> Effect (Promise Boolean)
+
+isEnabledNami2
+  :: Type -> Aff Boolean
+isEnabledNami2 = isEnabledNamiImpl2 >>> PromiseAff.toAffE
 
 -- TODO: Implement a class of functions for a generic prop (that may or may not exist). Prop shouuld be searched by Proxy.
 
@@ -46,6 +55,5 @@ foreign import maybePropImpl
 
 maybeProp
   :: Window -> Effect (Maybe Type)
-maybeProp w =
-  pure $ runFn3 maybePropImpl w Just Nothing
+maybeProp w = pure $ runFn3 maybePropImpl w Just Nothing
 

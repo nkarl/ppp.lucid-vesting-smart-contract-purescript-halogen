@@ -6,7 +6,7 @@ import Components.App as App
 import Data.Maybe (Maybe(..))
 import Data.String (Pattern(..), contains)
 import Effect (Effect)
-import Effect.Aff (launchAff_)
+import Effect.Aff (Aff, launchAff_)
 import Effect.Aff.Class (class MonadAff)
 import Effect.Class (liftEffect)
 import Effect.Class.Console (logShow)
@@ -44,6 +44,8 @@ main = do
   launchAff_ $ liftEffect $ viewEffectsWallet
   launchAff_ $ liftEffect $ viewEffectsNami
   launchAff_ $ liftEffect $ viewEffectsProp
+  launchAff_ $ performEffectsNamiFromWindow
+  launchAff_ $ performEffectsNamiFromNami
 
 viewEffectsWindow :: Effect Unit
 viewEffectsWindow =
@@ -62,6 +64,16 @@ viewEffectsNami = do
   void $ case nami of
     Nothing -> pure unit
     Just x -> void $ Utils.myLog "spy content of wallet API with Maybe handling `Just Nami`" x
+
+performEffectsNamiFromWindow :: Aff Unit
+performEffectsNamiFromWindow  = do
+  w <- liftEffect window
+  void $ WalletFFI.isEnabledNami w >>= Utils.myLog "spy content of promise `nami.isEnabled` (from `window`)"
+
+performEffectsNamiFromNami :: Aff Unit
+performEffectsNamiFromNami = do
+  nami <- liftEffect $ WalletFFI.hasNamiImpl =<< window
+  void $ WalletFFI.isEnabledNami2 nami >>= Utils.myLog "spy content of promise `nami.isEnabled` from (`window.cardano.nami`)"
 
 viewEffectsProp :: Effect Unit
 viewEffectsProp = do

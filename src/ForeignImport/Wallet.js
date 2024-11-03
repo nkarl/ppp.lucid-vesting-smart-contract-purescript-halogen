@@ -18,19 +18,26 @@ export function maybeNamiImpl(window, just, nothing) {
   }
 }
 
-//export function enableImpl(window) {
-//var enable = window.cardano.nami.enable;
-//return function() {
-//return enable();
-//}
-//}
+export function enableNamiImpl(window) {
+  var enable = window.cardano.nami.enable;
+  return function() {
+    return enable();
+  }
+}
 
-//export function isEnabledImpl(window) {
-//var isEnabled = window.cardano.nami.isEnabled;
-//return async function() {
-//return await isEnabled();
-//}
-//}
+export function isEnabledNamiImpl(window) {
+  var isEnabled = window.cardano.nami.isEnabled;
+  return async function() {
+    return await isEnabled();
+  }
+}
+
+export function isEnabledNamiImpl2(nami) {
+  var isEnabled = nami.isEnabled;
+  return async function() {
+    return await isEnabled();
+  }
+}
 
 export function hasPropImpl(window) {
   return function() {
