@@ -3,11 +3,11 @@ module Main where
 import Prelude
 
 import Components.App as App
-import Data.Maybe (Maybe(..), fromMaybe)
+import Data.Maybe (Maybe(..))
 import Data.String (Pattern(..), contains)
 import Effect (Effect)
-import Effect.Aff (Aff, launchAff_)
-import Effect.Aff.Class (class MonadAff, liftAff)
+import Effect.Aff (launchAff_)
+import Effect.Aff.Class (class MonadAff)
 import Effect.Class (liftEffect)
 import Effect.Class.Console (logShow)
 import ForeignImport.Wallet as WalletFFI
@@ -31,47 +31,45 @@ component =
 
 main :: Effect Unit
 main = do
-  -- NOTE: browser agent guard
+  -- NOTE browser agent guard
   agent <- userAgent =<< navigator =<< window
   logShow agent
-  if (Pattern "Chrome") `contains` agent then do
-    HA.runHalogenAff do
-      body <- HA.awaitBody
-      runUI component unit body
+  if (Pattern "Chrome") `contains` agent then
+    HA.runHalogenAff $ runUI component unit =<< HA.awaitBody
   else
     alert "The App only supports Chromium-based browser." =<< window
-  -- NOTE: end browser agent guard
+  -- NOTE end browser agent guard
 
-  launchAff_ $ liftEffect $ viewEffectWalletFFI
+  launchAff_ $ liftEffect $ viewEffectsWindow
+  launchAff_ $ liftEffect $ viewEffectsWallet
+  launchAff_ $ liftEffect $ viewEffectsNami
+  launchAff_ $ liftEffect $ viewEffectsProp
 
-viewEffectWalletFFI :: Effect Unit
-viewEffectWalletFFI = do
-  w <- liftEffect $
-    window >>= Utils.myLog "spy content `window`"
-  cardano <- liftEffect $
-    WalletFFI.hasCardanoImpl w >>= Utils.myLog "spy content `window.cardano`"
-  _ <- liftEffect $
-    WalletFFI.hasNamiImpl cardano >>= Utils.myLog "spy content `window.cardano.nami`"
+viewEffectsWindow :: Effect Unit
+viewEffectsWindow =
+  void $ Utils.myLog "spy content of `window`" =<< window
 
-  -- NOTE parse and view FakeProp
-  p <- liftEffect $
-    WalletFFI.hasPropImpl w >>= Utils.myLog "spy content `window.prop`"
+viewEffectsWallet :: Effect Unit
+viewEffectsWallet =
+  void $ (WalletFFI.hasCardanoImpl =<< window) >>= Utils.myLog "spy content of Cardano chain `window.cardano`"
 
-  -- NOTE parse and view FakeProp with Maybe handling
-  someProp <- WalletFFI.maybeProp w
-  _ <- case someProp of
+viewEffectsNami :: Effect Unit
+viewEffectsNami = do
+  nami <- (WalletFFI.maybeNami =<< window)
+  -- NOTE parse and view Nami node
+  void $ Utils.myLog "spy content of wallet API `window.cardano.nami`" nami
+  -- NOTE parse and view Nami node with Maybe handling
+  void $ case nami of
     Nothing -> pure unit
-    Just x' -> do
-      _ <- Utils.myLog "spy content of `Just Prop`" x'
-      pure unit
-  pure unit
+    Just x -> void $ Utils.myLog "spy content of wallet API with Maybe handling `Just Nami`" x
 
-  -- NOTE parse and view Nami with Maybe handling
-  nami <- WalletFFI.maybeNami w
-  _ <- case nami of
-    Nothing -> pure unit
-    Just x' -> do
-      _ <- Utils.myLog "spy content of `Just Nami`" x'
-      pure unit
-  pure unit
-
+viewEffectsProp :: Effect Unit
+viewEffectsProp = do
+  w <- window
+  -- NOTE parse and view some Prop 
+  void $ WalletFFI.hasPropImpl w >>= Utils.myLog "spy content `window.prop`"
+  -- NOTE parse and view some Prop with Maybe handling
+  prop <- WalletFFI.maybeProp w
+  void $ case prop of
+    Nothing -> logShow "this code path is supposed to show nothing."
+    Just x' -> void $ Utils.myLog "spy content of `Just Prop`" x'

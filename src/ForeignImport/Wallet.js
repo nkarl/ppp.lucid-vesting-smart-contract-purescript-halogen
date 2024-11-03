@@ -4,23 +4,9 @@ export function hasCardanoImpl(window) {
   }
 }
 
-export function hasNamiImpl(cardano) {
+export function hasNamiImpl(window) {
   return function() {
-    return cardano.nami;
-  }
-}
-
-export function hasPropImpl(window) {
-  return function() {
-    return window.prop;
-  }
-}
-
-export function maybePropImpl(window, just, nothing) {
-  if (window.prop) {
-    return just(window.prop);
-  } else {
-    return nothing;
+    return window.cardano.nami;
   }
 }
 
@@ -45,3 +31,17 @@ export function maybeNamiImpl(window, just, nothing) {
 //return await isEnabled();
 //}
 //}
+
+export function hasPropImpl(window) {
+  return function() {
+    return window.prop;
+  }
+}
+
+export function maybePropImpl(window, just, nothing) {
+  if (window.prop) {
+    return just(window.prop);
+  } else {
+    return nothing;
+  }
+}
