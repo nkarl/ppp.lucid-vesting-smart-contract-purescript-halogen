@@ -19,6 +19,8 @@ import Web.HTML (window)
 import Web.HTML.Navigator (userAgent)
 import Web.HTML.Window (alert, navigator)
 
+import ForeignImport.Lucid as Lucid
+
 component :: forall q i o m. MonadAff m => H.Component q i o m
 component =
   H.mkComponent
@@ -46,6 +48,20 @@ main = do
   launchAff_ $ liftEffect $ viewEffectsProp
   launchAff_ $ performEffectsNamiFromWindow
   launchAff_ $ performEffectsNamiFromNami
+  launchAff_ $ liftEffect do
+     -- TODO: change to support env vars
+     let spec = { url: "https://hello.world/"
+                , id : "abcdefg"
+                }
+     block <- Lucid.createProvider spec
+     void $ Utils.myLog "spy content of blockfrost object" block
+  launchAff_ do
+     let spec = { url: "https://hello.world/"
+                , id : "abcdefg"
+                }
+     lucid <- Lucid.createPromiseLucid spec
+     void $ Utils.myLog "spy content of lucid object" lucid
+     pure unit
 
 viewEffectsWindow :: Effect Unit
 viewEffectsWindow =

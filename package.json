@@ -3,18 +3,39 @@
     "version": "1.0.0",
     "scripts": {
         "postinstall": "spago install",
-        "clean": "rm -rf node_modules output .spago dist/*.js *.lock .cache",
+        "clean": "rm -rf node_modules output .spago dist/*.js* *.lock .cache",
         "build": "spago build",
         "test": "spago test",
-        "serve": "spago build && esbuild --bundle index.js --outfile=dist/index.js  --servedir=dist",
+        "serve": "spago build && webpack serve --open",
         "bundle": "spago bundle --minify --output output-es --outfile dist/index.js"
     },
     "author": "",
     "license": "ISC",
     "description": "",
+    "devDependencies": {
+        "@popperjs/core": "^2.11.8",
+        "autoprefixer": "^10.4.20",
+        "css-loader": "^7.1.2",
+        "html-webpack-plugin": "^5.6.3",
+        "postcss-loader": "^8.1.1",
+        "sass": "^1.80.4",
+        "sass-loader": "^16.0.2",
+        "style-loader": "^4.0.0",
+        "webpack": "^5.95.0",
+        "webpack-cli": "^5.1.4",
+        "webpack-dev-server": "^5.1.0"
+    },
     "dependencies": {
+        "bootstrap": "^5.3.3",
+        "copy-webpack-plugin": "^12.0.2",
         "dotenv": "^16.4.5",
-        "esbuild": "^0.23.1",
-        "lucid-cardano": "^0.10.10"
+        "dotenv-webpack": "^8.1.0",
+        "lucid-cardano": "^0.10.10",
+        "node-polyfill-webpack-plugin": "^4.0.0",
+        "process": "^0.11.10",
+        "web3": "^4.14.0"
+    },
+    "browser": {
+        "path": false
     }
 }
