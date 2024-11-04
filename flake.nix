@@ -28,7 +28,6 @@
           inherit name;
           buildInputs =
             [
-              pkgs.esbuild
               pkgs.nodejs_22
               pkgs.purs
               pkgs.purs-tidy
