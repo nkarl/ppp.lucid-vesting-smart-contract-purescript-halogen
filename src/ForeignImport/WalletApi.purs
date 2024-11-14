@@ -1,4 +1,4 @@
-module ForeignImport.Wallet where
+module ForeignImport.WalletApi where
 
 import Prelude
 
@@ -45,7 +45,8 @@ isEnabledNami2
   :: Type -> Aff Boolean
 isEnabledNami2 = isEnabledNamiImpl2 >>> PromiseAff.toAffE
 
--- TODO: Implement a class of functions for a generic prop (that may or may not exist). Prop shouuld be searched by Proxy.
+-- | TODO: Implement a class of functions for a generic prop (that may or may not exist).
+-- | Prop shouuld be searched by Proxy.
 
 foreign import hasPropImpl
   :: Window -> Effect Type

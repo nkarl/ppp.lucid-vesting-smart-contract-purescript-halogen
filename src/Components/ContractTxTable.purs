@@ -1,26 +1,36 @@
 module Components.ContractTxTable where
 
+import Prelude
+
+import Components.HTML.Utils (className)
+import Halogen as H
 import Halogen.HTML as HH
 import Halogen.HTML.Properties as HP
 
-import Components.HTML.Utils (className)
+component :: forall q i o m. H.Component q i o m
+component =
+  H.mkComponent
+    { initialState: identity
+    , render: render
+    , eval: H.mkEval $ H.defaultEval
+    }
+  where
 
-render :: forall t w i. t -> HH.HTML w i
-render _ =
-  HH.div [ className "accordion", HP.id "actions" ]
-    [ HH.div [ className "container-fluid" ]
-        [ HH.table [ className "table table-sm table-hover table-bordered", HP.id "utxosTable" ]
-            [ HH.caption_ [ HH.text "UTxO's on Cardano" ]
-            , HH.thead_
-                [ HH.tr_
-                    [ HH.th_ [ HH.text "Ref" ]
-                    , HH.th_ [ HH.text "Stakeholder" ]
-                    , HH.th_ [ HH.text "ADA" ]
-                    , HH.th_ [ HH.text "Deadline" ]
-                    ]
-                ]
-            , HH.tbody [ HP.id "vestingUTxOsTable" ]
-                []
-            ]
-        ]
-    ]
+  render _ =
+    HH.div [ className "accordion", HP.id "actions" ]
+      [ HH.div [ className "container-fluid" ]
+          [ HH.table [ className "table table-sm table-hover table-bordered", HP.id "utxosTable" ]
+              [ HH.caption_ [ HH.text "UTxO's on Cardano" ]
+              , HH.thead_
+                  [ HH.tr_
+                      [ HH.th_ [ HH.text "Ref" ]
+                      , HH.th_ [ HH.text "Stakeholder" ]
+                      , HH.th_ [ HH.text "ADA" ]
+                      , HH.th_ [ HH.text "Deadline" ]
+                      ]
+                  ]
+              , HH.tbody [ HP.id "vestingUTxOsTable" ]
+                  []
+              ]
+          ]
+      ]
