@@ -6,9 +6,15 @@ import Components.HTML.Utils (className)
 import Halogen as H
 import Halogen.HTML as HH
 import Halogen.HTML.Properties as HP
+import Type.Proxy (Proxy(..))
+
+_label = Proxy :: Proxy "contractTxTable"
 
 component :: forall q i o m. H.Component q i o m
-component =
+component = contractTxTable
+
+contractTxTable :: forall q i o m. H.Component q i o m
+contractTxTable =
   H.mkComponent
     { initialState: identity
     , render: render

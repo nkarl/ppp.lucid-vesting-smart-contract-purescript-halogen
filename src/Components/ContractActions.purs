@@ -9,10 +9,16 @@ import Halogen as H
 import Halogen.HTML as HH
 import Halogen.HTML.Properties as HP
 import Halogen.HTML.Properties.ARIA as HPAria
+import Type.Proxy (Proxy(..))
 import Web.HTML.Common (AttrName(..))
 
+_label = Proxy :: Proxy "contractActions"
+
 component :: forall q i o m. H.Component q i o m
-component =
+component = contractActions
+
+contractActions :: forall q i o m. H.Component q i o m
+contractActions =
   H.mkComponent
     { initialState: identity
     , render: render

@@ -1,4 +1,4 @@
-module Components.WalletInfo where
+module Components.Wallet where
 
 import Prelude
 
@@ -6,9 +6,12 @@ import Components.HTML.Utils (className)
 import Halogen as H
 import Halogen.HTML as HH
 import Halogen.HTML.Properties as HP
+import Type.Proxy (Proxy(..))
 
-component :: forall q i o m. H.Component q i o m
-component =
+_label = Proxy :: Proxy "walletInfo"
+
+walletInfo :: forall q i o m. H.Component q i o m
+walletInfo =
   H.mkComponent
     { initialState: identity
     , render: render

@@ -6,7 +6,7 @@
         "clean": "rm -rf node_modules output .spago dist/*.js* *.lock .cache",
         "build": "spago build",
         "test": "spago test",
-        "serve": "spago build && webpack serve --open",
+        "serve": "spago build && npm run bundle && webpack serve -o dist",
         "bundle": "spago bundle --minify --output output-es --outfile dist/index.js"
     },
     "author": "",
@@ -30,6 +30,7 @@
         "copy-webpack-plugin": "^12.0.2",
         "dotenv": "^16.4.5",
         "dotenv-webpack": "^8.1.0",
+        "esbuild": "^0.24.0",
         "lucid-cardano": "^0.10.10",
         "node-polyfill-webpack-plugin": "^4.0.0",
         "process": "^0.11.10",

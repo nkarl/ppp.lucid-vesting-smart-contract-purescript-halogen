@@ -5,13 +5,22 @@ import Prelude
 import Components.ContractActions as ContractActions
 import Components.ContractTxTable as ContractTxTable
 import Components.HTML.Utils (className)
-import Components.WalletInfo as WalletInfo
+import Components.Wallet as Wallet
+import Effect (Effect)
 import Halogen as H
+import Halogen.Aff as HA
 import Halogen.HTML as HH
-import Type.Proxy (Proxy(..))
+import Halogen.VDom.Driver (runUI)
 
-component :: forall q i o m. H.Component q i o m
-component =
+type Slots :: Row Type
+type Slots =
+  ( walletInfo :: forall q o. H.Slot q o Unit
+  , contractActions :: forall q o. H.Slot q o Unit
+  , contractTxTable :: forall q o. H.Slot q o Unit
+  )
+
+app :: forall q i o m. H.Component q i o m
+app =
   H.mkComponent
     { initialState: identity
     , render: render
@@ -19,21 +28,24 @@ component =
     }
 
   where
-
+  render :: forall s a. s -> HH.ComponentHTML a Slots m
   render _ =
     HH.div
       [ className "container-fluid d-flex flex-column" ]
       [ HH.div [ className "row" ]
           [ HH.div [ className "col" ]
-              [ HH.slot_ (Proxy :: Proxy "component") unit WalletInfo.component unit
+              [ HH.slot_ Wallet._label unit Wallet.walletInfo unit
               ]
           ]
       , HH.div [ className "row" ]
           [ HH.div [ className "col-4" ]
-              [ HH.slot_ (Proxy :: Proxy "component") unit ContractActions.component unit
+              [ HH.slot_ ContractActions._label unit ContractActions.component unit
               ]
           , HH.div [ className "col-8" ]
-              [ HH.slot_ (Proxy :: Proxy "component") unit ContractTxTable.component unit
+              [ HH.slot_ ContractTxTable._label unit ContractTxTable.component unit
               ]
           ]
       ]
+
+run :: Effect Unit
+run = HA.runHalogenAff $ (runUI app unit) =<< HA.awaitBody
