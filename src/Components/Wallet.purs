@@ -3,6 +3,7 @@ module Components.Wallet where
 import Prelude
 
 import Components.HTML.Utils (className)
+import Data.Maybe (Maybe(..))
 import Halogen as H
 import Halogen.HTML as HH
 import Halogen.HTML.Properties as HP
@@ -10,19 +11,33 @@ import Type.Proxy (Proxy(..))
 
 _label = Proxy :: Proxy "walletInfo"
 
-component :: forall q i o m. H.Component q i o m
+component :: forall q o m. H.Component q Input o m
 component = walletInfo
 
-walletInfo :: forall q i o m. H.Component q i o m
+data Action = Click | Receive Input
+
+type Input = { pkh :: String, balance :: Int }
+
+type State = { pkh :: String, balance :: Int }
+
+data Output = Clicked
+
+walletInfo :: forall q o m. H.Component q Input o m
 walletInfo =
   H.mkComponent
-    { initialState: identity
+    { initialState: initialState
     , render: render
     , eval: H.mkEval $ H.defaultEval
+        { handleAction = handleAction
+        , receive = Just <<< Receive
+        }
     }
   where
+  initialState :: Input -> State
+  initialState _ = { pkh: "", balance: 0 }
 
-  render _ =
+  render :: State -> H.ComponentHTML Action () m
+  render { pkh, balance } =
     HH.table [ className "table table-hover container mt-3" ]
       [ HH.thead_
           [ HH.tr_
@@ -35,9 +50,20 @@ walletInfo =
       , HH.tbody_
           [ HH.tr_
               [ HH.td [ className "col-6", HP.id "cardanoPKH" ]
-                  [ HH.text "as89234dsf0gh1s0sd0f0234kasdfafa" ]
+                  --[ HH.text "example as89234dsf0gh1s0sd0f0234kasdfafa" ]
+                  [ HH.text $ pkh ]
               , HH.td [ className "col-6", HP.id "cardanoBalance" ]
-                  [ HH.text "10000" ]
+                  --[ HH.text "example 10000" ]
+                  [ HH.text $ show balance ]
               ]
           ]
       ]
+
+  handleAction :: Action -> H.HalogenM State Action () o m Unit
+  handleAction = case _ of
+                     Receive input -> do
+                        H.modify_ _ { pkh = input.pkh, balance = input.balance }
+                        
+                     Click ->
+                       pure unit
+                       --H.raise Clicked

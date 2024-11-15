@@ -19,7 +19,7 @@ import Web.HTML (window)
   TODO:  design data and actions for the components.
   The App component may track the LucidAPI object as State (which is FFD type).
     1. Wallet component
-      - reads `PKH` and `balance` from, which can be sent as Input.
+      - receives `PKH` and `balance` as input from this parent App.
         - may need to be run as an Aff to listen to input from App
     2. ContractActions component
     3. ContractTxTable component
@@ -33,6 +33,8 @@ type Slots =
   , contractActions :: forall q o. H.Slot q o Unit
   , contractTxTable :: forall q o. H.Slot q o Unit
   )
+
+data Action = Handle Wallet.Output
 
 app :: forall q i o m. H.Component q i o m
 app =
@@ -49,7 +51,7 @@ app =
       [ className "container-fluid d-flex flex-column" ]
       [ HH.div [ className "row" ]
           [ HH.div [ className "col" ]
-              [ HH.slot_ Wallet._label unit Wallet.component unit
+              [ HH.slot_ Wallet._label unit Wallet.component { pkh: "", balance : 0}
               ]
           ]
       , HH.div [ className "row" ]
