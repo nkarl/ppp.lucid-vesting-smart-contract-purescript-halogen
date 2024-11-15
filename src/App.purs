@@ -12,6 +12,18 @@ import Halogen.Aff as HA
 import Halogen.HTML as HH
 import Halogen.VDom.Driver (runUI)
 
+{--
+  TODO:  design data and actions for the components.
+  The App component may track the LucidAPI object as State (which is FFD type).
+    1. Wallet component
+      - reads `PKH` and `balance` from, which can be sent as Input.
+        - may need to be run as an Aff to listen to input from App
+    2. ContractActions component
+    3. ContractTxTable component
+      - reads UTxO array from the address of vesting contract. 
+        - may need to be run as an Aff to listen to input from App
+--}
+
 type Slots :: Row Type
 type Slots =
   ( walletInfo :: forall q o. H.Slot q o Unit
@@ -34,7 +46,7 @@ app =
       [ className "container-fluid d-flex flex-column" ]
       [ HH.div [ className "row" ]
           [ HH.div [ className "col" ]
-              [ HH.slot_ Wallet._label unit Wallet.walletInfo unit
+              [ HH.slot_ Wallet._label unit Wallet.component unit
               ]
           ]
       , HH.div [ className "row" ]

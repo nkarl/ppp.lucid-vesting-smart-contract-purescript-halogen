@@ -19,8 +19,10 @@ function createProviderImpl(_) {
 function createPromiseLucidImpl(window) {
     var provider = new L.Blockfrost(blockfrost.url, blockfrost.id);
     var api = (async () => await window.cardano.nami.enable())();
-    const lucid = (async () => await L.Lucid.new(provider, "Preview"))
-        ().then(a => a.selectWallet(api));
+    const lucid =
+      (
+        async () => await L.Lucid.new(provider, "Preview")
+      )().then(a => a.selectWallet(api));
     return async function() {
         return lucid;
     }

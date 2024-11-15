@@ -10,6 +10,9 @@ import Type.Proxy (Proxy(..))
 
 _label = Proxy :: Proxy "walletInfo"
 
+component :: forall q i o m. H.Component q i o m
+component = walletInfo
+
 walletInfo :: forall q i o m. H.Component q i o m
 walletInfo =
   H.mkComponent
