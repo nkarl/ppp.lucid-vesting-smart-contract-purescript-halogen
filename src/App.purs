@@ -7,6 +7,7 @@ import Components.ContractTxTable as ContractTxTable
 import Components.HTML.Utils (className)
 import Components.Wallet as Wallet
 import Effect (Effect)
+import Effect.Class (class MonadEffect)
 import ForeignImport.Lucid as Lucid
 import Halogen as H
 import Halogen.Aff as HA
@@ -34,9 +35,7 @@ type Slots =
   , contractTxTable :: forall q o. H.Slot q o Unit
   )
 
-data Action = Handle Wallet.Output
-
-app :: forall q i o m. H.Component q i o m
+app :: forall q i o m. MonadEffect m => H.Component q i o m
 app =
   H.mkComponent
     { initialState: identity

@@ -4,14 +4,18 @@ import Prelude
 
 import Components.HTML.Utils (className)
 import Data.Maybe (Maybe(..))
+import Effect.Class (class MonadEffect)
 import Halogen as H
 import Halogen.HTML as HH
 import Halogen.HTML.Properties as HP
 import Type.Proxy (Proxy(..))
+import Web.Clipboard (clipboard, writeText)
+import Web.HTML (window)
+import Web.HTML.Window (navigator)
 
 _label = Proxy :: Proxy "walletInfo"
 
-component :: forall q o m. H.Component q Input o m
+component :: forall q o m. MonadEffect m => H.Component q Input o m
 component = walletInfo
 
 data Action = Click | Receive Input
@@ -20,9 +24,7 @@ type Input = { pkh :: String, balance :: Int }
 
 type State = { pkh :: String, balance :: Int }
 
-data Output = Clicked
-
-walletInfo :: forall q o m. H.Component q Input o m
+walletInfo :: forall q o m. MonadEffect m => H.Component q Input o m
 walletInfo =
   H.mkComponent
     { initialState: initialState
@@ -64,6 +66,11 @@ walletInfo =
                      Receive input -> do
                         H.modify_ _ { pkh = input.pkh, balance = input.balance }
                         
-                     Click ->
-                       pure unit
-                       --H.raise Clicked
+                     Click -> do
+                        clip <- H.lift $ H.liftEffect (clipboard =<< navigator =<< window)
+                        case clip of 
+                            Just c -> do
+                               pkh <- H.gets _.pkh
+                               void $ H.lift $ H.liftEffect $ writeText pkh (c)
+                            Nothing -> pure unit
+                        pure unit
