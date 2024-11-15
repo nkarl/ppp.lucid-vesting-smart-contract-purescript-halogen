@@ -10,7 +10,7 @@ module.exports = {
         asyncWebAssembly: true,
         topLevelAwait: true,
     },
-    mode: 'development',
+    mode: 'production',
     entry: './index.js',
     devtool: 'inline-source-map',
     devServer: {
@@ -21,7 +21,7 @@ module.exports = {
     plugins: [
         new HtmlWebpackPlugin({
             title: 'Vesting',
-            template: './dist/index.html'
+            template: './index.html'
         }),
         new NodePolyfillPlugin(),
         new ProvidePlugin({

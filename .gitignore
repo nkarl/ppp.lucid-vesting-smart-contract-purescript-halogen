@@ -11,3 +11,5 @@
 /dist/*.js
 /.bak/
 .env
+**/**/*.wasm
+/dist/

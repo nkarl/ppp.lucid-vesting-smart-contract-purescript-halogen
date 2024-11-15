@@ -7,10 +7,13 @@ import Components.ContractTxTable as ContractTxTable
 import Components.HTML.Utils (className)
 import Components.Wallet as Wallet
 import Effect (Effect)
+import ForeignImport.Lucid as Lucid
 import Halogen as H
 import Halogen.Aff as HA
 import Halogen.HTML as HH
 import Halogen.VDom.Driver (runUI)
+import Utils as Utils
+import Web.HTML (window)
 
 {--
   TODO:  design data and actions for the components.
@@ -59,5 +62,20 @@ app =
           ]
       ]
 
+{--
+  Only 2 member functions are used for this app:
+    1. lucid.utils.validatorToAddress(vestingScript)
+    2. lucid.utxosAt(address)
+--}
+
 run :: Effect Unit
-run = HA.runHalogenAff $ (runUI app unit) =<< HA.awaitBody
+run = HA.runHalogenAff
+  do
+    let render = runUI app unit
+    -- gets global states from the browser window
+    w <- H.liftEffect window
+    lucid <- (Lucid.createPromiseLucid) w
+    void $ Utils.myLog "spy content of lucid object" lucid
+    -- begins rendering this component
+    --body <- HA.awaitBody
+    render =<< HA.awaitBody

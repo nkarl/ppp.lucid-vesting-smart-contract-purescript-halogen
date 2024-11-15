@@ -28,7 +28,23 @@ function createPromiseLucidImpl(window) {
     }
 }
 
+/**
+ * returns a promise.
+ */
+function validatorToAddressImpl(lucid, vestingScript) {
+    return lucid.utils.validatorToAddress(vestingScript);
+}
+
+/**
+ * returns a promise.
+ */
+async function utxosAtImpl(lucid, address) {
+    return await lucid.utxosAt(address); 
+}
+
 export {
     createProviderImpl,
-    createPromiseLucidImpl
+    createPromiseLucidImpl,
+    validatorToAddressImpl,
+    utxosAtImpl
 }
